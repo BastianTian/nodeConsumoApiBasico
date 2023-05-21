@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Libros</title>
+    <style>
+      * {
+        margin: 10px;
+      }
+      /* Estilos CSS para la pantalla */
+      /* Agrega tus estilos personalizados aquí */
+    </style>
+  </head>
+  <body>
+    <h1>Libros API</h1>
+
+    <h2>Lista de libros</h2>
+    <form action="/books" method="GET">
+      <button value="submitGetAll" type="submit">
+        Obtener todos los libros
+      </button>
+    </form>
+
+    <h2>Libros por Id</h2>
+    <form id="myForm" method="GET" action="">
+      <input type="number" id="inputValue" />
+      <input id="buttonValue" value="Buscar id " type="submit" />
+    </form>
+
+    <h2>Agregar Libro</h2>
+
+    <form action="/books" method="POST">
+      <label for="title">Título:</label>
+      <br />
+      <input type="text" id="title" name="title" required />
+      <br />
+
+      <label for="description">Descripción:</label>
+      <br />
+      <textarea id="description" name="description"></textarea>
+      <br />
+
+      <label for="author">Autor:</label>
+      <br />
+      <input type="text" id="author" name="author" />
+      <br />
+      <button value="submitAdd" type="submit">Agregar libro</button>
+    </form>
+
+    <h2>Actualizar Libros por Id</h2>
+    <form id="update" method="" action="">
+        <label for="idPut">Id:</label>
+        <br />
+        <input type="number" id="idPut" />
+        <br />
+        <label for="putTitle">Título:</label>
+        <br />
+        <input type="text" id="putTitle" name="putTitle" required />
+        <br />
+
+        <label for="putDescription">Descripción:</label>
+        <br />
+        <textarea id="putDescription" name="putDescription"></textarea>
+        <br />
+
+        <label for="putAuthor">Autor:</label>
+        <br />
+        <input type="text" id="putAuthor" name="putAuthor" />
+        <br />
+        <input id="buttonPut" value="Actualizar id " type="submit">
+    </form>
+
+    <h2>Eliminar por Id</h2>
+    <form id="delete" method="" action="">
+      <input type="number" id="deleteId" />
+      <input value="Eliminar libro" type="submit" />
+    </form>
+
+    <script src="index.js"></script>
+    <script>
+      const form = document.getElementById("myForm");
+      const inputValue = document.getElementById("inputValue");
+      const buttonValue = document.getElementById("buttonValue");
+
+      const formPut = document.getElementById("update");
+      const idPut = document.getElementById("idPut");
+      const buttonPut = document.getElementById("buttonPut");
+
+      const formDelete = document.getElementById("delete");
+
+      inputValue.addEventListener("input", () => {
+        const newAction = "/books/" + inputValue.value;
+        form.action = newAction;
+        buttonValue.value = "Buscar id " + inputValue.value;
+      });
+
+      <!-- PUT -->
+        formPut.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evitar el envío del formPutulario por defecto
+
+            const id = document.getElementById('idPut').value;
+            const title = document.getElementById('putTitle').value;
+            const description = document.getElementById('putDescription').value;
+            const author = document.getElementById('putAuthor').value;
+
+            const requestBody = {
+            title: title,
+            description: description,
+            author: author
+            };
+
+            fetch(`/books/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+            })
+            .then(response => {
+                if (response.ok) {
+                // Procesar la respuesta exitosa
+                console.log('El libro se actualizó correctamente.');
+                } else {
+                // Procesar errores de respuesta
+                console.error('Error al actualizar el libro.');
+                }
+            })
+            .catch(error => {
+                // Procesar errores de red
+                console.error('Error de red:', error);
+            });
+        });
+        idPut.addEventListener("input", () => {
+            buttonPut.value = "Actualizar id " + idPut.value;
+        });
+
+
+        formDelete.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evitar el envío del formPutulario por defecto
+
+            const id = document.getElementById('deleteId').value;
+
+            fetch(`/books/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }})
+            .then(response => {
+                if (response.ok) {
+                // Procesar la respuesta exitosa
+                console.log('El libro se Elimino correctamente.');
+                } else {
+                // Procesar errores de respuesta
+                console.error('Error al eliminar el libro.');
+                }
+            })
+            .catch(error => {
+                // Procesar errores de red
+                console.error('Error de red:', error);
+            });
+        });
+        
+    </script>
+  </body>
+</html>
